@@ -7,7 +7,7 @@ import pickle
 import matplotlib.pyplot as plt
 
 # load the pickle file
-with open('MindMNIST_bendr.pkl', 'rb') as f:
+with open('MindMNIST_bendr_pre.pkl', 'rb') as f:
     arrays = pickle.load(f) 
     digit_labels = pickle.load(f)
 
@@ -35,6 +35,7 @@ y = digit_labels
 # Convert to torch tensors
 X_train = torch.tensor(X, dtype=torch.float32)
 y_train = torch.tensor(y, dtype=torch.int64)
+vec_length = 512
 
 # Create a Dataset and DataLoader
 dataset = TensorDataset(X_train, y_train)
@@ -55,8 +56,12 @@ class LinearClassifier(nn.Module):
         #     nn.ReLU(),
         #     nn.Linear(64, 2)
         # )
-        self.linear = nn.Linear(256, 2)
-
+        self.linear = nn.Sequential(
+            nn.Linear(vec_length, vec_length//2),
+            nn.ReLU(),
+            nn.Linear(vec_length//2, 2)
+        )
+        # self.linear = nn.Linear(256, 2)
 
     def forward(self, x):
         return self.linear(x)
@@ -65,7 +70,7 @@ model = LinearClassifier()
 
 # Loss and Optimizer
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.Adam(model.parameters(), lr=0.005)
+optimizer = optim.Adam(model.parameters(), lr=0.003)
 
 # Training Loop
 losses = []
@@ -96,6 +101,11 @@ for epoch in range(3000):  # number of epochs
 
     print(f'Epoch {epoch+1}, Loss: {epoch_loss}, Acc: {epoch_acc}')
 
-breakpoint()
+# breakpoint()
 plt.plot(losses)
+plt.savefig("figs/losses.png")
+plt.show()
+
+plt.plot(accs)
+plt.savefig("figs/accs.png")
 plt.show()

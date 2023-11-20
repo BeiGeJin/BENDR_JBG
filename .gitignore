@@ -1,6 +1,7 @@
 MU.txt
 MindMNIST.pkl
 MindMNIST_bendr.pkl
+MindMNIST_bendr_pre.pkl
 output.csv
 \pretrained
 \checkpoints

@@ -68,7 +68,7 @@ optimizer = optim.Adam(model.parameters(), lr=0.002)
 # Training Loop
 losses = []
 accs = []
-for epoch in range(1000):  # number of epochs
+for epoch in range(200):  # number of epochs
     epoch_loss = 0
     epoch_acc = 0
     for data in train_loader:
@@ -95,4 +95,9 @@ for epoch in range(1000):  # number of epochs
     print(f'Epoch {epoch+1}, Loss: {epoch_loss}, Acc: {epoch_acc}')
 
 plt.plot(losses)
+plt.savefig("figs/losses_raw.png")
+plt.show()
+
+plt.plot(accs)
+plt.savefig("figs/accs_raw.png")
 plt.show()

@@ -44,7 +44,7 @@ process = BendingCollegeWav2Vec(encoder, contextualizer)
 process.set_optimizer(torch.optim.Adam(process.parameters()))
 process.add_batch_transform(RandomTemporalCrop())
 
-process.fit(training_dataset, epochs=5, num_workers=0)
+process.fit(training_dataset, epochs=1, num_workers=0)
 # print(process.evaluate(training_dataset))
 
 tqdm.tqdm.write("Saving last model...")
