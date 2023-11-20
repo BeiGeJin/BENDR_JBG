@@ -14,7 +14,8 @@ with open('MindMNIST.pkl', 'rb') as f:
 
 digit_labels = np.array(digit_labels)
 arrays = np.stack(z_arrays, axis=0)
-arrays = arrays.reshape(-1,4*480)
+vec_length = arrays.shape[1]*arrays.shape[2]
+arrays = arrays.reshape(-1,vec_length)
 
 # test on 1 and 5
 valid_data = (digit_labels == 1) | (digit_labels == 5)
@@ -48,7 +49,12 @@ train_loader = DataLoader(dataset, batch_size=32, shuffle=True)
 class LinearClassifier(nn.Module):
     def __init__(self):
         super(LinearClassifier, self).__init__()
-        self.linear = nn.Linear(1920, 2)
+        self.linear = nn.Sequential(
+            nn.Linear(vec_length, vec_length//2),
+            nn.ReLU(),
+            nn.Linear(vec_length//2, 2)
+        )
+        # self.linear = nn.Linear(vec_length, 2)
 
     def forward(self, x):
         return self.linear(x)
@@ -57,12 +63,12 @@ model = LinearClassifier()
 
 # Loss and Optimizer
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.Adam(model.parameters(), lr=0.001)
+optimizer = optim.Adam(model.parameters(), lr=0.002)
 
 # Training Loop
 losses = []
 accs = []
-for epoch in range(2000):  # number of epochs
+for epoch in range(1000):  # number of epochs
     epoch_loss = 0
     epoch_acc = 0
     for data in train_loader:

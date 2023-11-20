@@ -27,14 +27,21 @@ with open('MindMNIST.pkl', 'rb') as f:
 # digit_labels = digit_labels[valid_data]
 
 # preprocess
+arrays_processed = []
+for array in z_arrays:
+    array_20 = np.tile(array, (5,1))
+    arrays_processed.append(array_20)
+
 digit_labels = np.array(digit_labels)
-arrays = np.stack(z_arrays, axis=0)
+arrays = np.stack(arrays_processed, axis=0)
+# breakpoint()
 
 # test on 1 and 5
 valid_data = (digit_labels == 1) | (digit_labels == 5)
-X = arrays[valid_data, :]
+X = arrays[valid_data, :, :]
 y = digit_labels[valid_data]
 y = y // np.max(y)
+# breakpoint()
 
 # Convert to torch tensors
 # X = arrays
@@ -47,10 +54,10 @@ dataset = TensorDataset(X_train, y_train)
 train_loader = DataLoader(dataset, batch_size=32, shuffle=True)
 
 # Define BENDR
-encoder = ConvEncoderBENDR(4, encoder_h=512)
+encoder = ConvEncoderBENDR(20, encoder_h=512)
 contextualizer = BENDRContextualizer(encoder.encoder_h)
-encoder.load("checkpoints/my_encoder.pt")
-contextualizer.load("checkpoints/my_contextualizer.pt")
+encoder.load("pretrained/encoder.pt")
+contextualizer.load("pretrained/contextualizer.pt")
 
 # Run BENDR
 vecs = []
@@ -67,12 +74,12 @@ for data in train_loader:
     vec = context[:,:,-1]
     vecs.append(vec.detach().numpy())
     digs.append(labels.detach().numpy())
-    breakpoint()
+    # breakpoint()
 
 # save results
 vecs_np = np.vstack(vecs)
 digs_np = np.concatenate(digs)
-with open('MindMNIST_bendr.pkl', 'wb') as f:
+with open('MindMNIST_bendr_pre.pkl', 'wb') as f:
     pickle.dump(vecs_np, f)
     pickle.dump(digs_np, f)
 

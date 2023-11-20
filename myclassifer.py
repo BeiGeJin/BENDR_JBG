@@ -24,13 +24,13 @@ with open('MindMNIST_bendr.pkl', 'rb') as f:
 # y = digit_labels  # Random labels for 10 classes
 # # breakpoint()
 
-valid_data = (digit_labels == 1) | (digit_labels == 5)
-X = arrays[valid_data, :]
-y = digit_labels[valid_data]
-y = y // np.max(y)
+# valid_data = (digit_labels == 1) | (digit_labels == 5)
+# X = arrays[valid_data, :]
+# y = digit_labels[valid_data]
+# y = y // np.max(y)
 
-# X = arrays
-# y = digit_labels
+X = arrays
+y = digit_labels
 
 # Convert to torch tensors
 X_train = torch.tensor(X, dtype=torch.float32)
@@ -44,19 +44,18 @@ train_loader = DataLoader(dataset, batch_size=32, shuffle=True)
 class LinearClassifier(nn.Module):
     def __init__(self):
         super(LinearClassifier, self).__init__()
-        self.linear = nn.Sequential(
-            nn.Linear(512, 1024), 
-            nn.ReLU(),
-            nn.Linear(1024, 512),
-            nn.ReLU(),
-            nn.Linear(512, 256),
-            nn.ReLU(),
-            nn.Linear(256, 128),
-            nn.ReLU(),
-            nn.Linear(128, 64),
-            nn.ReLU(),
-            nn.Linear(64, 2)
-        )
+        # self.linear = nn.Sequential(
+        #     nn.Linear(256, 512),
+        #     nn.ReLU(),
+        #     nn.Linear(512, 256),
+        #     nn.ReLU(),
+        #     nn.Linear(256, 128),
+        #     nn.ReLU(),
+        #     nn.Linear(128, 64),
+        #     nn.ReLU(),
+        #     nn.Linear(64, 2)
+        # )
+        self.linear = nn.Linear(256, 2)
 
 
     def forward(self, x):

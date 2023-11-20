@@ -1,0 +1,9 @@
+To use the get_shape_from_baseconcar, InputShapeSetterEEG, BraindecodeDatasetLoaderyou need to install `braindecode`.`pip install braindecode` or Please refer to `https://braindecode.org`.
+GPU(s) detected: training and model execution will be performed on GPU.
+Loading data with 0 additional workers
+Training: End of Epoch 1 | Accuracy: 39.16% | Mask_pct: 45.20% | loss: 3.865 | lr: 5.213e-04 | epoch: 1.000 |
+Training: End of Epoch 2 | Accuracy: 100.00% | Mask_pct: 45.00% | loss: nan | lr: 9.499e-04 | epoch: 2.000 |
+Training: End of Epoch 3 | Accuracy: 100.00% | Mask_pct: 45.12% | loss: nan | lr: 6.857e-04 | epoch: 3.000 |
+Training: End of Epoch 4 | Accuracy: 100.00% | Mask_pct: 44.73% | loss: nan | lr: 3.128e-04 | epoch: 4.000 |
+Training: End of Epoch 5 | Accuracy: 100.00% | Mask_pct: 44.99% | loss: nan | lr: 4.955e-05 | epoch: 5.000 |
+Saving last model...

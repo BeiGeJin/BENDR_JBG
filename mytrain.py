@@ -19,13 +19,13 @@ with open('MindMNIST.pkl', 'rb') as f:
 
 digit_labels = np.array(digit_labels)
 arrays = np.stack(z_arrays, axis=0)
-# arrays = arrays.reshape(-1,4*480)
 
 # test on 1 and 5
 valid_data = (digit_labels == 1) | (digit_labels == 5)
 X = arrays[valid_data, :]
 y = digit_labels[valid_data]
 y = y // np.max(y)
+X = np.tile(X, 10)
 
 # Convert to torch tensors
 X_train = torch.tensor(X, dtype=torch.float32)
@@ -35,9 +35,8 @@ y_train = torch.tensor(y, dtype=torch.int64)
 training_dataset = TensorDataset(X_train, y_train)
 # train_loader = DataLoader(dataset, batch_size=32, shuffle=True)
 
-
 # Model
-encoder = ConvEncoderBENDR(4)
+encoder = ConvEncoderBENDR(4, encoder_h=512)
 contextualizer = BENDRContextualizer(encoder.encoder_h)
 process = BendingCollegeWav2Vec(encoder, contextualizer)
 
@@ -45,10 +44,9 @@ process = BendingCollegeWav2Vec(encoder, contextualizer)
 process.set_optimizer(torch.optim.Adam(process.parameters()))
 process.add_batch_transform(RandomTemporalCrop())
 
-process.fit(training_dataset, epochs=100)
-
+process.fit(training_dataset, epochs=5, num_workers=0)
 # print(process.evaluate(training_dataset))
 
-tqdm.tqdm.write("Saving best model...")
-encoder.save('checkpoints/jbg_encoder_best_val.pt')
-contextualizer.save('checkpoints/jbg_contextualizer_best_val.pt')
+tqdm.tqdm.write("Saving last model...")
+encoder.save(f'checkpoints/my_encoder.pt')
+contextualizer.save(f'checkpoints/my_contextualizer.pt')
